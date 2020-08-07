@@ -38,3 +38,15 @@ If it is okay to lose messages acks=0 is fine.
 - acks=1: The reponse of the leader broker is requested. But the broker will not wait for the acknowledging of the followers.
 Messages get lost if leader goes down before the followers got the replications of the messages.
 
+- acks=all or acks=-1: Is the strongest available guarantee. The leader waits for acknowledging of all in-sync replicas and then
+responses. Acks=all is necessary if you don't wont loose data. By applaying acks=all you als need to apply **min.insync.replicas**
+to enable durablitiy. Common setting is min.insync.replicas=2. Then two ISR including the leader must acknowlege. When the 
+replication.factor=3, acks=all and min.insync.replicas=2 you can tolerate one offline broker, if more brokers are offline the 
+producer throws an exception.
+
+### Idempotence
+
+Making the producer idempotent solve the problem of duplicated messages through network error. The idempotent procucer
+also sets up retries=Interger.Max\_VALUE, max.in.flight.requests=5 without losing the order and acks=all. (You can also set does
+value manually to show the exact config in your application.)
+To make the procucer idempotent set **ENABLE_IDEMPOTENCE_CONFIG** to "true".

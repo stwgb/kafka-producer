@@ -15,12 +15,18 @@ public class AdvancedKafkaProducer {
         Logger logger = LoggerFactory.getLogger(CallbackKafkaProducer.class);
 
         final String bootstrapServer = "localhost:9094";
-        final String topic = "advanced-kafka-producer-topic";
+        final String topic = "save-topic";
 
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        // Make the producer safe and apply exactly-once semantics
+        properties.setProperty(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
+        properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
+        properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
+        properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
 
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties);
 
