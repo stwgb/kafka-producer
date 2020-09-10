@@ -25,7 +25,7 @@ will also change. Because the calculation depends on the number of partitions.
 
 ## AdvancedKafkaProducer
 
-The AdvancedKafkaProducer has a shutdownhook which gets executed, when the producer stops.
+The AdvancedKafkaProducer has a shutdown hook which gets executed, when the producer stops.
 You can take this hook to close connections and close itself to send the remaining messages.
    
 ### Acks
@@ -35,11 +35,11 @@ Acks enable durability guarantees:
 - acks=0: No response of the broker is required -> data can be lost if broker goes down or producer throws an exception.
 If it is okay to lose messages acks=0 is fine.
 
-- acks=1: The response of the leader broker is requested. But the broker will not wait for the acknowledging of the followers.
+- acks=1: The response of the leader broker is required. But the broker will not wait for the acknowledging of the followers.
 Messages get lost if leader goes down before the followers got the replications of the messages.
 
 - acks=all or acks=-1: Is the strongest available guarantee. The leader waits for acknowledging of all in-sync replicas and then
-responses. Acks=all is necessary if you don't wont loose data. By applying acks=all you als need to apply **min.insync.replicas**
+responses. Acks=all is necessary if you don't want loose data. By applying acks=all you also need to apply **min.insync.replicas**
 to enable durability. Common setting is min.insync.replicas=2. Then two ISR including the leader must acknowledge. When the 
 replication.factor=3, acks=all and min.insync.replicas=2 you can tolerate one offline broker, if more brokers are offline the 
 producer throws an exception.
@@ -53,7 +53,7 @@ To make the producer idempotent set **ENABLE_IDEMPOTENCE_CONFIG** to "true".
 
 ## HighThroughputProducer
 
-The HighThroughputProducer uses compression. Compressing is useful for text-based messages like json. You have to setup the
+The HighThroughputProducer uses compression. Compressing is useful for text-based messages like json. You have to set up the
 **compression.type** property, which can be:
 
 - none
@@ -63,5 +63,5 @@ The HighThroughputProducer uses compression. Compressing is useful for text-base
 
 If compression is enabled the kafka producer will compress the messages. If you create a batch of messages the compression is
 more effective. This will decrease the batch size as well as the latency at the cost of cpu usage.
-To setup a high throughput consumer we need to setup up **linger.ms** (milliseconds till the producer sends the batch) and the **batch.size**, because the producer will send the
+To set up a high throughput consumer we need to set up **linger.ms** (milliseconds till the producer sends the batch), and the **batch.size**, because the producer will send the
 messages as fast as possible to Kafka. 

@@ -11,11 +11,10 @@ import java.util.Properties;
 
 public class AdvancedKafkaProducer {
     public static void main(String[] args) {
-
         Logger logger = LoggerFactory.getLogger(CallbackKafkaProducer.class);
 
         final String bootstrapServer = "localhost:9094";
-        final String topic = "save-topic";
+        final String topic = "highthrouput-topic";
 
         Properties properties = new Properties();
         properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
@@ -27,15 +26,6 @@ public class AdvancedKafkaProducer {
         properties.setProperty(ProducerConfig.ACKS_CONFIG, "all");
         properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
         properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
-
-        // High throughput settings
-
-        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
-
-        // If the use-case allows we wait for 30ms before sending the batch
-        properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "30");
-        // If batch size (32kB) is reached -> the batch will be send (even if we still linger)
-        properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32*1024));
 
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties);
 
